@@ -2,3 +2,6 @@ $ The test bench uses different tick hertz and calculated with different ratio t
 
 
 $below is the screenshot of the GTK Wave Waveform
+
+
+![Waveform with Name Marker](lab1WaveformCS161L.png)
