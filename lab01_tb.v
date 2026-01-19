@@ -1,182 +1,68 @@
-//=========================================================================
-// Name & Email must be EXACTLY as in Gradescope roster!
-// Name: 
-// Email: 
-// 
-// Assignment name: 
-// Lab section: 
-// TA: 
-// 
-// I hereby certify that I have not received assistance on this assignment,
-// or used code, from ANY outside source other than the instruction team
-// (apart from what was provided in the starter file).
-//
-//=========================================================================
-
-`timescale 1ns / 1ps
-
-module lab01_tb;
-    // Inputs
-    reg clk;
-    reg reset;
-
-    // Outputs
-
-
-    // -------------------------------------------------------
-    // Setup output file for possible debugging uses
-    // -------------------------------------------------------
-    initial
-    begin
-        $dumpfile("lab01.vcd");
-        $dumpvars(0);
-    end
-
-    // Declare wires for each unit under test
-    wire tick_100_2;
-    wire tick_100_5;
-    wire tick_100_50;
-
-    // -------------------------------------------------------
-    // Instantiate at least 3 Units Under Test (UUTs)
-    // -------------------------------------------------------
-    gen_tick #(.SRC_FREQ(100), .TICK_FREQ(2)) uut_100_2 (
-        .src_clk(clk),
-        .enable(1'b1) ,  
-        .tick(tick_100_2)
-    );
-    gen_tick #(.SRC_FREQ(100), .TICK_FREQ(5)) uut_100_5 (
-        .src_clk(clk),
-        .enable(1'b1) ,  
-        .tick(tick_100_5)
-    );
-    gen_tick #(.SRC_FREQ(100), .TICK_FREQ(50)) uut_100_50 (
-        .src_clk(clk),
-        .enable(1'b1) ,  
-        .tick(tick_100_50)
-    );
-
-    // -------------------------------------------------------
-    // Instantiate at least 2 more units here 
-    // -------------------------------------------------------
-
-    initial begin 
-    
-        clk = 0; reset = 1; #50; 
-        clk = 1; reset = 1; #50; 
-        clk = 0; reset = 0; #50; 
-        clk = 1; reset = 0; #50; 
-         
-        forever begin 
-            clk = ~clk; #50; 
-        end 
-    end 
-    
-    integer totalTests = 0;
-    integer failedTests = 0;
-
-    integer count = 0;
-    integer high_count = 0;
-    reg last_tick = 0;
-    integer transition_count = 0;
-
-    initial begin // Test suite
-        // Reset
-        @(negedge reset); // Wait for reset to be released (from another initial block)
-        @(posedge clk);   // Wait for first clock out of reset 
-        #10; // Wait 10 cycles 
-
-        // Initial test cases
-        // ---------------------------------------------
-        // Testing Source clock 100Hz, Tick 2Hz 
-        // --------------------------------------------- 
-        $write("Test Source clock 100Hz, Tick 2Hz ... ");
-        totalTests <= 1;
-        while(count < 1000) begin
-            @(posedge clk);
-            if (last_tick == 0 & tick_100_2 != last_tick) begin
-                transition_count <= transition_count + 1;
-            end
-            count = count + 1;
-            if (tick_100_2 == 1) begin
-                high_count <= high_count + 1;
-            end
-            last_tick <= tick_100_2;
-        end
-
-        if (high_count == 500 & transition_count == 20) begin
-            $display("PASSED");
-        end else begin
-            $display("FAILED");
-            failedTests = failedTests + 1;
-        end
-        $display("Load (%d/%d): %0.2f", high_count, count, 1.0 * high_count / count);
-        $display("Transition count: %d", transition_count);
-        
-
-        
-		// Add more tests here
-        $write("Test Source clock 100Hz, Tick 2Hz ... ");
-        totalTests <= 1;
-        while(count < 1000) begin
-            @(posedge clk);
-            if (last_tick == 0 & tick_100_5 != last_tick) begin
-                transition_count <= transition_count + 1;
-            end
-            count = count + 1;
-            if (tick_100_5 == 1) begin
-                high_count <= high_count + 1;
-            end
-            last_tick <= tick_100_5;
-        end
-
-        if (high_count == 500 & transition_count == 20) begin
-            $display("PASSED");
-        end else begin
-            $display("FAILED");
-            failedTests = failedTests + 1;
-        end
-        $display("Load (%d/%d): %0.2f", high_count, count, 1.0 * high_count / count);
-        $display("Transition count: %d", transition_count);
-        // Re-initialize counters for each test
-        last_tick = 0;
-        transition_count = 0;
-        count = 0;
-        high_count = 0;
-
-        //--------------------------------------------------
-        $write("Test Source clock 100Hz, Tick 2Hz ... ");
-        totalTests <= 1;
-        while(count < 1000) begin
-            @(posedge clk);
-            if (last_tick == 0 & tick_100_50 != last_tick) begin
-                transition_count <= transition_count + 1;
-            end
-            count = count + 1;
-            if (tick_100_50 == 1) begin
-                high_count <= high_count + 1;
-            end
-            last_tick <= tick_100_50;
-        end
-
-        #100
-
-        if (high_count == 500 & transition_count == 500) begin
-            $display("PASSED");
-        end else begin
-            $display("FAILED");
-            failedTests = failedTests + 1;
-        end
-        $display("Load (%d/%d): %0.2f", high_count, count, 1.0 * high_count / count);
-        $display("Transition count: %d", transition_count);
-        // Re-initialize counters for each test
-        last_tick = 0;
-        transition_count = 0;
-        count = 0;
-        high_count = 0;
-        // Copy the test case above at least 2 more times to test each unit under test
-        // Be sure to change the expected counts to match the configuration of the UUT
-
-        $finish;
-    end
-endmodule
+#! /usr/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/system.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi";
+S_0x5611ca042490 .scope module, "gen_tick" "gen_tick" 2 16;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "src_clk";
+    .port_info 1 /INPUT 1 "enable";
+    .port_info 2 /OUTPUT 1 "tick";
+P_0x5611ca067dd0 .param/l "SRC_FREQ" 0 2 16, +C4<00000000000000000001001110001000>;
+P_0x5611ca067e10 .param/l "TICK_FREQ" 0 2 16, +C4<00000000000000000000000000000001>;
+L_0x5611ca08ca90 .functor BUFZ 1, v0x5611ca08c950_0, C4<0>, C4<0>, C4<0>;
+v0x5611ca044400_0 .var/i "accumulator", 31 0;
+o0x76c089cbb048 .functor BUFZ 1, C4<z>; HiZ drive
+v0x5611ca08c5d0_0 .net "enable", 0 0, o0x76c089cbb048;  0 drivers
+v0x5611ca08c690_0 .var/i "limit", 31 0;
+o0x76c089cbb0a8 .functor BUFZ 1, C4<z>; HiZ drive
+v0x5611ca08c780_0 .net "src_clk", 0 0, o0x76c089cbb0a8;  0 drivers
+v0x5611ca08c840_0 .net "tick", 0 0, L_0x5611ca08ca90;  1 drivers
+v0x5611ca08c950_0 .var "tick_out", 0 0;
+E_0x5611ca042bb0 .event posedge, v0x5611ca08c780_0;
+    .scope S_0x5611ca042490;
+T_0 ;
+    %pushi/vec4 2499, 0, 32;
+    %store/vec4 v0x5611ca08c690_0, 0, 32;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x5611ca044400_0, 0, 32;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x5611ca08c950_0, 0, 1;
+    %end;
+    .thread T_0;
+    .scope S_0x5611ca042490;
+T_1 ;
+    %wait E_0x5611ca042bb0;
+    %load/vec4 v0x5611ca08c5d0_0;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_1.0, 8;
+    %load/vec4 v0x5611ca044400_0;
+    %addi 1, 0, 32;
+    %assign/vec4 v0x5611ca044400_0, 0;
+    %load/vec4 v0x5611ca08c690_0;
+    %load/vec4 v0x5611ca044400_0;
+    %cmp/s;
+    %flag_or 5, 4;
+    %jmp/0xz  T_1.2, 5;
+    %load/vec4 v0x5611ca08c950_0;
+    %inv;
+    %assign/vec4 v0x5611ca08c950_0, 0;
+    %pushi/vec4 0, 0, 32;
+    %assign/vec4 v0x5611ca044400_0, 0;
+T_1.2 ;
+    %jmp T_1.1;
+T_1.0 ;
+    %pushi/vec4 0, 0, 1;
+    %assign/vec4 v0x5611ca08c950_0, 0;
+T_1.1 ;
+    %jmp T_1;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "gen_tick.v";
